@@ -1,5 +1,4 @@
 name: flutter_audio_example_app
-description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
 
@@ -9,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  huddle01_flutter_client: ^0.0.1-beta-v5.1.6
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:
