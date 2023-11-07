@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:huddle01_flutter_client/huddle01_flutter_client.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,16 +13,35 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String projectId = 'XBQsbfXdUWW7YlkyF9Yb7BSft6aILeOW';
-  String roomId = "zth-aegg-lgb";
+  String roomId = "ccj-qpde-xvb";
 
-  getPermissions() async {
+  // getPermissions() async {
+  //   if (Platform.isIOS) return;
+  //   await Permission.camera.request();
+  //   await Permission.microphone.request();
+  //   await Permission.bluetooth.request();
+  //   await Permission.bluetoothConnect.request();
+  // }
+  Future<bool> getPermissions() async {
+    if (Platform.isIOS) return true;
     await Permission.camera.request();
     await Permission.microphone.request();
+    await Permission.bluetoothConnect.request();
+
+    while ((await Permission.camera.isDenied)) {
+      await Permission.camera.request();
+    }
+    while ((await Permission.microphone.isDenied)) {
+      await Permission.microphone.request();
+    }
+    while ((await Permission.bluetoothConnect.isDenied)) {
+      await Permission.bluetoothConnect.request();
+    }
+    return true;
   }
 
   @override
   void initState() {
-    getPermissions();
     huddleClient.huddleEventListeners();
     super.initState();
   }
@@ -51,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                 children: [
                   TextButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
+                        await getPermissions();
                         huddleClient.initialize(projectId);
                       },
                       icon: const Icon(Icons.start_sharp),
