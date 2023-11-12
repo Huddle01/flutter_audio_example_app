@@ -207,10 +207,10 @@ packages:
     dependency: "direct main"
     description:
       name: huddle01_flutter_client
-      sha256: "54b7fe3958ddfdafb845626b12a6f91bd27ba8cf1eb4a77a9672d9ba18574eb8"
+      sha256: "0e5a1afd1ef1762cf3959ed10b91dd17b3342e6284c1db5d9d0ef8f079796f70"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-beta-v5.1.6"
+    version: "0.0.1-beta-v5.2"
   io:
     dependency: transitive
     description:
@@ -271,10 +271,10 @@ packages:
     dependency: transitive
     description:
       name: mediasoup_engine
-      sha256: d23d7a2d28f8e36a4279e676c0e7adb0c00eedbd8218c10c57234512fbe786f4
+      sha256: d0907bf4c1cff4b117c66b8bd2d234d53e8e3fc92d68a485ddd65dab66eac022
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   meta:
     dependency: transitive
     description:
