@@ -12,16 +12,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String projectId = 'XBQsbfXdUWW7YlkyF9Yb7BSft6aILeOW';
-  String roomId = "ccj-qpde-xvb";
+  String projectId = 'YOUR_PROJECT_ID';
+  String roomId = "YOUR_ROOM_ID";
 
-  // getPermissions() async {
-  //   if (Platform.isIOS) return;
-  //   await Permission.camera.request();
-  //   await Permission.microphone.request();
-  //   await Permission.bluetooth.request();
-  //   await Permission.bluetoothConnect.request();
-  // }
+  List<MediaDeviceInfo>? audioInput;
+  List<MediaDeviceInfo>? audioOutput;
+
   Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
     await Permission.camera.request();
@@ -97,6 +93,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       icon: const Icon(Icons.room_preferences),
                       label: const Text("JOIN ROOM")),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  TextButton.icon(
+                      onPressed: () async {
+                        await huddleClient.leaveRoom();
+                      },
+                      icon: const Icon(Icons.door_back_door),
+                      label: const Text("LEAVE ROOM")),
                 ],
               )),
               Expanded(
@@ -108,6 +113,117 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: const Icon(Icons.audiotrack),
                         label: const Text("FETCH AUDIO")),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    TextButton.icon(
+                        onPressed: () {
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text("More options"),
+                              content: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ElevatedButton(
+                                    child:
+                                        const Text('CHANGE INPUT AUDIO DEVICE'),
+                                    onPressed: () async {
+                                      audioInput = await huddleClient
+                                          .getAudioInputDevices();
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text(
+                                              "Select input Audio Device"),
+                                          content: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              SingleChildScrollView(
+                                                reverse: true,
+                                                child: Column(
+                                                  children: audioInput!
+                                                      .map(
+                                                        (e) => ElevatedButton(
+                                                          child: Text(e.label),
+                                                          onPressed: () => {
+                                                            huddleClient
+                                                                .changeMic(e),
+                                                            Navigator.pop(
+                                                                context)
+                                                          },
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    child: const Text(
+                                        'CHANGE OUTPUT AUDIO DEVICE'),
+                                    onPressed: () async {
+                                      audioOutput = await huddleClient
+                                          .getAudioOutputDevices();
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text(
+                                              "Select output Audio Device"),
+                                          content: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              SingleChildScrollView(
+                                                reverse: true,
+                                                child: Column(
+                                                  children: audioOutput!
+                                                      .map(
+                                                        (e) => ElevatedButton(
+                                                          child: Text(e.label),
+                                                          onPressed: () => {
+                                                            huddleClient
+                                                                .switchAudioDevice(
+                                                                    e),
+                                                            Navigator.pop(
+                                                                context)
+                                                          },
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.multitrack_audio),
+                        label: const Text("CHANGE AUDIO")),
+                    const SizedBox(
+                      height: 5,
+                    ),
                     TextButton.icon(
                         onPressed: () async {
                           await huddleClient
@@ -134,15 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 5,
-          ),
-          TextButton.icon(
-              onPressed: () async {
-                await huddleClient.leaveRoom();
-              },
-              icon: const Icon(Icons.door_back_door),
-              label: const Text("LEAVE ROOM")),
           const SizedBox(
             height: 15,
           ),
