@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String projectId = 'YOUR_PROJECT_ID';
   String roomId = "YOUR_ROOM_ID";
-
   List<MediaDeviceInfo>? audioInput;
   List<MediaDeviceInfo>? audioOutput;
 
@@ -113,9 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: const Icon(Icons.audiotrack),
                         label: const Text("FETCH AUDIO")),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     const SizedBox(
                       height: 5,
                     ),
@@ -228,7 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () async {
                           await huddleClient
                               .produceAudio(huddleClient.getAudioStream());
-                          setState(() {});
                         },
                         icon: const Icon(Icons.mic),
                         label: const Text("START MIC")),
@@ -236,9 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 5,
                     ),
                     TextButton.icon(
-                        onPressed: () {
-                          huddleClient.stopProducingAudio();
-                          setState(() {});
+                        onPressed: () async {
+                          await huddleClient.stopProducingAudio();
                         },
                         icon: const Icon(Icons.mic_off),
                         label: const Text("STOP MIC")),
