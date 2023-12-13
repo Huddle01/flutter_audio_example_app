@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_example_app/widgets/custom_snackbar.dart';
 import 'package:huddle01_flutter_client/huddle01_flutter_client.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -14,8 +15,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String projectId = 'YOUR_PROJECT_ID';
   String roomId = "YOUR_ROOM_ID";
+
   List<MediaDeviceInfo>? audioInput;
   List<MediaDeviceInfo>? audioOutput;
+
+  ValueNotifier<Map<String, bool>> micStatus = ValueNotifier<Map<String, bool>>(
+    {
+      "isAudioFetched": false,
+      "micStatus": false,
+    },
+  );
 
   Future<bool> getPermissions() async {
     if (Platform.isIOS) return true;
@@ -78,7 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   TextButton.icon(
                       onPressed: () {
-                        huddleClient.joinLobby(roomId);
+                        if (huddleClient.isJoinLobbyCallable()) {
+                          huddleClient.joinLobby(roomId);
+                        } else {
+                          customSnackbar(
+                              context, 'JOIN LOBBY NOT CALLABLE YET');
+                        }
                       },
                       icon: const Icon(Icons.room_service),
                       label: const Text("JOIN LOBBY")),
@@ -87,8 +101,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   TextButton.icon(
                       onPressed: () async {
-                        await huddleClient.joinRoom();
-                        setState(() {});
+                        if (huddleClient.isJoinRoomCallable()) {
+                          await huddleClient.joinRoom();
+                        } else {
+                          customSnackbar(context, 'JOIN ROOM NOT CALLABLE YET');
+                        }
                       },
                       icon: const Icon(Icons.room_preferences),
                       label: const Text("JOIN ROOM")),
@@ -98,6 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   TextButton.icon(
                       onPressed: () async {
                         await huddleClient.leaveRoom();
+                        micStatus.value = {
+                          "isAudioFetched": false,
+                          "micStatus": false,
+                        };
                       },
                       icon: const Icon(Icons.door_back_door),
                       label: const Text("LEAVE ROOM")),
@@ -108,7 +129,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     TextButton.icon(
                         onPressed: () async {
-                          await huddleClient.fetchAudioStream();
+                          if (huddleClient.isFetchAudioStreamCallable()) {
+                            await huddleClient.fetchAudioStream();
+                            micStatus.value = {
+                              "isAudioFetched": true,
+                              "micStatus": false,
+                            };
+                          } else {
+                            customSnackbar(
+                                context, 'FETCH AUDIO NOT CALLABLE YET');
+                          }
                         },
                         icon: const Icon(Icons.audiotrack),
                         label: const Text("FETCH AUDIO")),
@@ -222,8 +252,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextButton.icon(
                         onPressed: () async {
-                          await huddleClient
-                              .produceAudio(huddleClient.getAudioStream());
+                          if (huddleClient.isProduceAudioCallable()) {
+                            await huddleClient
+                                .produceAudio(huddleClient.getAudioStream());
+                            micStatus.value = {
+                              "isAudioFetched": true,
+                              "micStatus": true,
+                            };
+                          } else {
+                            customSnackbar(
+                                context, 'PRODUCE AUDIO NOT CALLABLE YET');
+                          }
                         },
                         icon: const Icon(Icons.mic),
                         label: const Text("START MIC")),
@@ -232,7 +271,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextButton.icon(
                         onPressed: () async {
-                          await huddleClient.stopProducingAudio();
+                          if (huddleClient.isStopProducingAudioCallable()) {
+                            await huddleClient.stopProducingAudio();
+                            micStatus.value = {
+                              "isAudioFetched": true,
+                              "micStatus": false,
+                            };
+                          } else {
+                            customSnackbar(
+                                context, 'STOP PRODUCE AUDIO NOT CALLABLE YET');
+                          }
                         },
                         icon: const Icon(Icons.mic_off),
                         label: const Text("STOP MIC")),
@@ -246,6 +294,86 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(
             height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ValueListenableBuilder(
+                valueListenable: roomState,
+                builder: (ctx, val, _) {
+                  return Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.blueGrey.shade100),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "your room state:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          val["roomState"],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 15, color: Colors.blueGrey),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              ValueListenableBuilder(
+                valueListenable: micStatus,
+                builder: (ctx, val, _) {
+                  return Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.blueGrey.shade100),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "your mic status:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              val["isAudioFetched"] == true
+                                  ? "AUDIO FETCHED"
+                                  : 'AUDIO NOT FETCHED YET',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 8, color: Colors.deepPurple),
+                            ),
+                            Text(
+                              val["micStatus"] == true
+                                  ? "mic is on"
+                                  : 'mic is off',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(20),
