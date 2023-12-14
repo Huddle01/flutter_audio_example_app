@@ -86,9 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 5,
                   ),
                   TextButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
                         if (huddleClient.isJoinLobbyCallable()) {
-                          huddleClient.joinLobby(roomId);
+                          await huddleClient.joinLobby(roomId);
                         } else {
                           customSnackbar(
                               context, 'JOIN LOBBY NOT CALLABLE YET');
@@ -103,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () async {
                         if (huddleClient.isJoinRoomCallable()) {
                           await huddleClient.joinRoom();
+                          // await huddleClient.fetchAudioStream();
                         } else {
                           customSnackbar(context, 'JOIN ROOM NOT CALLABLE YET');
                         }
@@ -142,111 +143,108 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: const Icon(Icons.audiotrack),
                         label: const Text("FETCH AUDIO")),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    TextButton.icon(
-                        onPressed: () {
-                          showDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text("More options"),
-                              content: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  ElevatedButton(
-                                    child:
-                                        const Text('CHANGE INPUT AUDIO DEVICE'),
-                                    onPressed: () async {
-                                      audioInput = await huddleClient
-                                          .getAudioInputDevices();
-                                      if (!mounted) return;
-                                      Navigator.pop(context);
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text(
-                                              "Select input Audio Device"),
-                                          content: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              SingleChildScrollView(
-                                                reverse: true,
-                                                child: Column(
-                                                  children: audioInput!
-                                                      .map(
-                                                        (e) => ElevatedButton(
-                                                          child: Text(e.label),
-                                                          onPressed: () => {
-                                                            huddleClient
-                                                                .changeMic(e),
-                                                            Navigator.pop(
-                                                                context)
-                                                          },
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    child: const Text(
-                                        'CHANGE OUTPUT AUDIO DEVICE'),
-                                    onPressed: () async {
-                                      audioOutput = await huddleClient
-                                          .getAudioOutputDevices();
-                                      if (!mounted) return;
-                                      Navigator.pop(context);
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text(
-                                              "Select output Audio Device"),
-                                          content: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              SingleChildScrollView(
-                                                reverse: true,
-                                                child: Column(
-                                                  children: audioOutput!
-                                                      .map(
-                                                        (e) => ElevatedButton(
-                                                          child: Text(e.label),
-                                                          onPressed: () => {
-                                                            huddleClient
-                                                                .switchAudioDevice(
-                                                                    e),
-                                                            Navigator.pop(
-                                                                context)
-                                                          },
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.multitrack_audio),
-                        label: const Text("CHANGE AUDIO")),
+                    //     onPressed: () {
+                    //       showDialog<void>(
+                    //         context: context,
+                    //         builder: (BuildContext context) => AlertDialog(
+                    //           title: const Text("More options"),
+                    //           content: Column(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             mainAxisSize: MainAxisSize.min,
+                    //             children: <Widget>[
+                    //               ElevatedButton(
+                    //                 child:
+                    //                     const Text('CHANGE INPUT AUDIO DEVICE'),
+                    //                 onPressed: () async {
+                    //                   audioInput = await huddleClient
+                    //                       .getAudioInputDevices();
+                    //                   if (!mounted) return;
+                    //                   Navigator.pop(context);
+                    //                   showDialog(
+                    //                     context: context,
+                    //                     builder: (context) => AlertDialog(
+                    //                       title: const Text(
+                    //                           "Select input Audio Device"),
+                    //                       content: Column(
+                    //                         mainAxisAlignment:
+                    //                             MainAxisAlignment.center,
+                    //                         mainAxisSize: MainAxisSize.min,
+                    //                         children: <Widget>[
+                    //                           SingleChildScrollView(
+                    //                             reverse: true,
+                    //                             child: Column(
+                    //                               children: audioInput!
+                    //                                   .map(
+                    //                                     (e) => ElevatedButton(
+                    //                                       child: Text(e.label),
+                    //                                       onPressed: () => {
+                    //                                         huddleClient
+                    //                                             .changeMic(e),
+                    //                                         Navigator.pop(
+                    //                                             context)
+                    //                                       },
+                    //                                     ),
+                    //                                   )
+                    //                                   .toList(),
+                    //                             ),
+                    //                           )
+                    //                         ],
+                    //                       ),
+                    //                     ),
+                    //                   );
+                    //                 },
+                    //               ),
+                    //               ElevatedButton(
+                    //                 child: const Text(
+                    //                     'CHANGE OUTPUT AUDIO DEVICE'),
+                    //                 onPressed: () async {
+                    //                   audioOutput = await huddleClient
+                    //                       .getAudioOutputDevices();
+                    //                   if (!mounted) return;
+                    //                   Navigator.pop(context);
+                    //                   showDialog(
+                    //                     context: context,
+                    //                     builder: (context) => AlertDialog(
+                    //                       title: const Text(
+                    //                           "Select output Audio Device"),
+                    //                       content: Column(
+                    //                         mainAxisAlignment:
+                    //                             MainAxisAlignment.center,
+                    //                         mainAxisSize: MainAxisSize.min,
+                    //                         children: <Widget>[
+                    //                           SingleChildScrollView(
+                    //                             reverse: true,
+                    //                             child: Column(
+                    //                               children: audioOutput!
+                    //                                   .map(
+                    //                                     (e) => ElevatedButton(
+                    //                                       child: Text(e.label),
+                    //                                       onPressed: () => {
+                    //                                         huddleClient
+                    //                                             .switchAudioDevice(
+                    //                                                 e),
+                    //                                         Navigator.pop(
+                    //                                             context)
+                    //                                       },
+                    //                                     ),
+                    //                                   )
+                    //                                   .toList(),
+                    //                             ),
+                    //                           )
+                    //                         ],
+                    //                       ),
+                    //                     ),
+                    //                   );
+                    //                 },
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //     icon: const Icon(Icons.multitrack_audio),
+                    //     label: const Text("CHANGE AUDIO")),
+
                     const SizedBox(
                       height: 5,
                     ),
