@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: coverage
-      sha256: ac86d3abab0f165e4b8f561280ff4e066bceaac83c424dd19f1ae2c2fcd12ca9
+      sha256: "8acabb8306b57a409bf4c83522065672ee13179297a6bb0cb9ead73948df7c76"
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.1"
+    version: "1.7.2"
   crypto:
     dependency: transitive
     description:
@@ -223,10 +223,10 @@ packages:
     dependency: "direct main"
     description:
       name: huddle01_flutter_client
-      sha256: "3683a7985972dc3a66436eb998f561ec88e8923dfbf7f5cc664ebde97c9ab127"
+      sha256: "29bac2e00a7743f4b63fb263183ffac001570b3b88bea936e8f13a28300504c3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-beta-v5.2.5"
+    version: "0.0.1-beta-v5.3"
   io:
     dependency: transitive
     description:
