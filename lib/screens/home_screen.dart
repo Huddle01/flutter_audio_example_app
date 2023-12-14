@@ -110,157 +110,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       icon: const Icon(Icons.room_preferences),
                       label: const Text("JOIN ROOM")),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  TextButton.icon(
-                      onPressed: () async {
-                        await huddleClient.leaveRoom();
-                        micStatus.value = {
-                          "isAudioFetched": false,
-                          "micStatus": false,
-                        };
-                      },
-                      icon: const Icon(Icons.door_back_door),
-                      label: const Text("LEAVE ROOM")),
                 ],
               )),
               Expanded(
                 child: Column(
                   children: [
-                    TextButton.icon(
-                        onPressed: () async {
-                          if (huddleClient.isFetchAudioStreamCallable()) {
-                            await huddleClient.fetchAudioStream();
-                            micStatus.value = {
-                              "isAudioFetched": true,
-                              "micStatus": false,
-                            };
-                          } else {
-                            customSnackbar(
-                                context, 'FETCH AUDIO NOT CALLABLE YET');
-                          }
-                        },
-                        icon: const Icon(Icons.audiotrack),
-                        label: const Text("FETCH AUDIO")),
-                    //     onPressed: () {
-                    //       showDialog<void>(
-                    //         context: context,
-                    //         builder: (BuildContext context) => AlertDialog(
-                    //           title: const Text("More options"),
-                    //           content: Column(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             mainAxisSize: MainAxisSize.min,
-                    //             children: <Widget>[
-                    //               ElevatedButton(
-                    //                 child:
-                    //                     const Text('CHANGE INPUT AUDIO DEVICE'),
-                    //                 onPressed: () async {
-                    //                   audioInput = await huddleClient
-                    //                       .getAudioInputDevices();
-                    //                   if (!mounted) return;
-                    //                   Navigator.pop(context);
-                    //                   showDialog(
-                    //                     context: context,
-                    //                     builder: (context) => AlertDialog(
-                    //                       title: const Text(
-                    //                           "Select input Audio Device"),
-                    //                       content: Column(
-                    //                         mainAxisAlignment:
-                    //                             MainAxisAlignment.center,
-                    //                         mainAxisSize: MainAxisSize.min,
-                    //                         children: <Widget>[
-                    //                           SingleChildScrollView(
-                    //                             reverse: true,
-                    //                             child: Column(
-                    //                               children: audioInput!
-                    //                                   .map(
-                    //                                     (e) => ElevatedButton(
-                    //                                       child: Text(e.label),
-                    //                                       onPressed: () => {
-                    //                                         huddleClient
-                    //                                             .changeMic(e),
-                    //                                         Navigator.pop(
-                    //                                             context)
-                    //                                       },
-                    //                                     ),
-                    //                                   )
-                    //                                   .toList(),
-                    //                             ),
-                    //                           )
-                    //                         ],
-                    //                       ),
-                    //                     ),
-                    //                   );
-                    //                 },
-                    //               ),
-                    //               ElevatedButton(
-                    //                 child: const Text(
-                    //                     'CHANGE OUTPUT AUDIO DEVICE'),
-                    //                 onPressed: () async {
-                    //                   audioOutput = await huddleClient
-                    //                       .getAudioOutputDevices();
-                    //                   if (!mounted) return;
-                    //                   Navigator.pop(context);
-                    //                   showDialog(
-                    //                     context: context,
-                    //                     builder: (context) => AlertDialog(
-                    //                       title: const Text(
-                    //                           "Select output Audio Device"),
-                    //                       content: Column(
-                    //                         mainAxisAlignment:
-                    //                             MainAxisAlignment.center,
-                    //                         mainAxisSize: MainAxisSize.min,
-                    //                         children: <Widget>[
-                    //                           SingleChildScrollView(
-                    //                             reverse: true,
-                    //                             child: Column(
-                    //                               children: audioOutput!
-                    //                                   .map(
-                    //                                     (e) => ElevatedButton(
-                    //                                       child: Text(e.label),
-                    //                                       onPressed: () => {
-                    //                                         huddleClient
-                    //                                             .switchAudioDevice(
-                    //                                                 e),
-                    //                                         Navigator.pop(
-                    //                                             context)
-                    //                                       },
-                    //                                     ),
-                    //                                   )
-                    //                                   .toList(),
-                    //                             ),
-                    //                           )
-                    //                         ],
-                    //                       ),
-                    //                     ),
-                    //                   );
-                    //                 },
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       );
+                    // TextButton.icon(
+                    //     onPressed: () async {
+                    //       if (huddleClient.isFetchAudioStreamCallable()) {
+                    //         await huddleClient.fetchAudioStream();
+                    //         micStatus.value = {
+                    //           "isAudioFetched": true,
+                    //           "micStatus": false,
+                    //         };
+                    //       } else {
+                    //         customSnackbar(
+                    //             context, 'FETCH AUDIO NOT CALLABLE YET');
+                    //       }
                     //     },
-                    //     icon: const Icon(Icons.multitrack_audio),
-                    //     label: const Text("CHANGE AUDIO")),
+                    //     icon: const Icon(Icons.audiotrack),
+                    //     label: const Text("FETCH AUDIO")),
 
-                    const SizedBox(
-                      height: 5,
-                    ),
                     TextButton.icon(
                         onPressed: () async {
-                          if (huddleClient.isProduceAudioCallable()) {
-                            await huddleClient
-                                .produceAudio(huddleClient.getAudioStream());
-                            micStatus.value = {
-                              "isAudioFetched": true,
-                              "micStatus": true,
-                            };
-                          } else {
-                            customSnackbar(
-                                context, 'PRODUCE AUDIO NOT CALLABLE YET');
-                          }
+                          await huddleClient
+                              .produceAudio(huddleClient.getAudioStream());
+                          micStatus.value = {
+                            "isAudioFetched": true,
+                            "micStatus": true,
+                          };
                         },
                         icon: const Icon(Icons.mic),
                         label: const Text("START MIC")),
@@ -285,6 +163,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 5,
                     ),
+
+                    TextButton.icon(
+                        onPressed: () async {
+                          await huddleClient.leaveRoom();
+                          micStatus.value = {
+                            "isAudioFetched": false,
+                            "micStatus": false,
+                          };
+                        },
+                        icon: const Icon(Icons.door_back_door),
+                        label: const Text("LEAVE ROOM")),
                   ],
                 ),
               ),
