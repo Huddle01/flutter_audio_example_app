@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/space_screen.dart';
 
 void main() => runApp(const MainApp());
 
@@ -14,7 +14,7 @@ class MainApp extends StatelessWidget {
       darkTheme: ThemeData.dark(
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const SpaceHome(),
     );
   }
 }
