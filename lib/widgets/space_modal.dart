@@ -12,7 +12,6 @@ class SpaceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    huddleClient.fetchAudioStream();
     return Container(
         height: MediaQuery.of(context).size.height -
             (MediaQuery.of(context).size.height * 0.25),

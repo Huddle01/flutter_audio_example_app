@@ -18,11 +18,21 @@ class _SpaceHeaderState extends State<SpaceHeader> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          icon: const Icon(Icons.arrow_downward_rounded,
-              color: Colors.white, size: 30),
-          onPressed: () {
-            print(peersList.value);
+        ValueListenableBuilder(
+          valueListenable: me,
+          builder: (ctx, val, _) {
+            return GestureDetector(
+              onTap: () {
+                print(peersList.value);
+              },
+              child: Text(
+                val["mic"] == true
+                    ? "your mic status -> mic is on"
+                    : 'your mic status -> mic is off',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, color: Colors.red),
+              ),
+            );
           },
         ),
         Row(
@@ -31,11 +41,10 @@ class _SpaceHeaderState extends State<SpaceHeader> {
                 icon: const Icon(Icons.abc_rounded,
                     color: Colors.white, size: 30),
                 onPressed: () async {
-                  widget.huddleClient.audioLevel();
-                  // await showDialog(
-                  //     context: context,
-                  //     builder: (BuildContext context) =>
-                  //         setNameDialog(context, widget.huddleClient));
+                  await showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          setNameDialog(context, widget.huddleClient));
                 }),
             const SizedBox(width: 15),
             TextButton(
@@ -43,7 +52,7 @@ class _SpaceHeaderState extends State<SpaceHeader> {
                 widget.huddleClient.leaveRoom();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LeaveScreen()),
+                  MaterialPageRoute(builder: (context) => LeaveScreen()),
                 );
               },
               child: const Text('Leave',

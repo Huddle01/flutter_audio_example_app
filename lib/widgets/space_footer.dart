@@ -22,23 +22,38 @@ class _SpaceFooterState extends State<SpaceFooter> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Material(
-              color: Colors.white.withOpacity(0.1),
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(50),
-              child: InkWell(
-                  highlightColor: Colors.white.withOpacity(0.1),
-                  splashColor: Colors.white.withOpacity(0.1),
-                  onTap: () async {
-                    if (peersList.value.containsKey(me.value['peerId'])) {
-                      peersList.value[me.value['peerId']]['mic'] = true;
-                    }
-                    await widget.huddleClient
-                        .produceAudio(widget.huddleClient.getAudioStream());
-                  },
-                  child: const Padding(
-                      padding: EdgeInsets.all(25),
-                      child: Icon(Icons.mic, color: SpacesColors.micColor)))),
+          ValueListenableBuilder(
+              valueListenable: me,
+              builder: (_, val, __) {
+                return Material(
+                    color: Colors.white.withOpacity(0.1),
+                    clipBehavior: Clip.antiAlias,
+                    borderRadius: BorderRadius.circular(50),
+                    child: InkWell(
+                        highlightColor: Colors.white.withOpacity(0.1),
+                        splashColor: Colors.white.withOpacity(0.1),
+                        onTap: () async {
+                          if (!val['mic']) {
+                            MediaStream? stream =
+                                widget.huddleClient.getAudioStream();
+
+                            if (stream == null) {
+                              return print(stream);
+                            }
+
+                            await widget.huddleClient.produceAudio(stream);
+                          } else {
+                            await widget.huddleClient.stopProducingAudio();
+                          }
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.all(25),
+                            child: !val['mic']
+                                ? const Icon(Icons.mic_off,
+                                    color: SpacesColors.micOffColor)
+                                : const Icon(Icons.mic,
+                                    color: SpacesColors.micOnColor))));
+              }),
           Material(
               color: Colors.white.withOpacity(0.1),
               clipBehavior: Clip.antiAlias,
@@ -143,40 +158,21 @@ class _SpaceFooterState extends State<SpaceFooter> {
                   child: const Padding(
                       padding: EdgeInsets.all(25),
                       child: Icon(Icons.audiotrack_rounded,
-                          color: SpacesColors.micColor)))),
-          Material(
-              color: Colors.white.withOpacity(0.1),
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(50),
-              child: InkWell(
-                  highlightColor: Colors.white.withOpacity(0.1),
-                  splashColor: Colors.white.withOpacity(0.1),
-                  onTap: () async {
-                    await widget.huddleClient.audioLevel();
-
-                    setState(() {});
-                  },
-                  child: const Padding(
-                      padding: EdgeInsets.all(25),
-                      child: Icon(Icons.live_help,
-                          color: SpacesColors.micColor)))),
-          Material(
-              color: Colors.white.withOpacity(0.1),
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(50),
-              child: InkWell(
-                  highlightColor: Colors.white.withOpacity(0.1),
-                  splashColor: Colors.white.withOpacity(0.1),
-                  onTap: () async {
-                    if (peersList.value.containsKey(me.value['peerId'])) {
-                      peersList.value[me.value['peerId']]['mic'] = false;
-                    }
-                    await widget.huddleClient.stopProducingAudio();
-                  },
-                  child: const Padding(
-                      padding: EdgeInsets.all(25),
-                      child:
-                          Icon(Icons.mic_off, color: SpacesColors.micColor))))
+                          color: SpacesColors.micOffColor)))),
+          // Material(
+          //     color: Colors.white.withOpacity(0.1),
+          //     clipBehavior: Clip.antiAlias,
+          //     borderRadius: BorderRadius.circular(50),
+          //     child: InkWell(
+          //         highlightColor: Colors.white.withOpacity(0.1),
+          //         splashColor: Colors.white.withOpacity(0.1),
+          //         onTap: () async {
+          //           await widget.huddleClient.stopProducingAudio();
+          //         },
+          //         child: const Padding(
+          //             padding: EdgeInsets.all(25),
+          //             child:
+          //                 Icon(Icons.mic_off, color: SpacesColors.micColor)))),
         ],
       ),
     );

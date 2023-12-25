@@ -1,8 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:huddle01_flutter_client/huddle01_flutter_client.dart';
 
-import '../constants/colors.dart';
-import 'space_sound_waves.dart';
 import 'user_avatar.dart';
 
 class SpaceConversation extends StatefulWidget {
@@ -15,12 +15,22 @@ class SpaceConversation extends StatefulWidget {
 }
 
 class _SpaceConversationState extends State<SpaceConversation> {
+  Timer? timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(milliseconds: 500),
+        (Timer t) => widget.huddleClient.audioLevel());
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    me.value = Map.from(me.value)
-      ..addAll({
-        'mic': false,
-      });
     peersList.value = Map.from(peersList.value)
       ..addAll({
         me.value.values.first: me.value,
@@ -29,9 +39,9 @@ class _SpaceConversationState extends State<SpaceConversation> {
         valueListenable: peersList,
         builder: (_, val, ___) {
           return GridView.count(
-              childAspectRatio: 0.75,
+              childAspectRatio: 0.5,
               crossAxisCount: 4,
-              mainAxisSpacing: 15,
+              mainAxisSpacing: 25,
               children: List.generate(val.length, (index) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -43,34 +53,14 @@ class _SpaceConversationState extends State<SpaceConversation> {
                     Text(val.values.toSet().elementAt(index)['displayName'],
                         style: const TextStyle(
                             color: Color.fromRGBO(255, 255, 255, 1),
-                            fontSize: 12)),
-                    val.values.toSet().elementAt(index)['mic'] == true
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                                const SpaceSoundWaves(),
-                                Text(val.values
-                                        .toSet()
-                                        .elementAt(index)['audioLevel'] ??
-                                    '')
-                              ])
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(right: 2),
-                                child: const Icon(
-                                  Icons.mic_off_rounded,
-                                  size: 15,
-                                  color: SpacesColors.micColor,
-                                ),
-                              ),
-                              Text(val.values
-                                      .toSet()
-                                      .elementAt(index)['audioLevel'] ??
-                                  '')
-                            ],
-                          )
+                            fontSize: 8)),
+                    const SizedBox(height: 5),
+                    Text(
+                        val.values.toSet().elementAt(index)['audioLevel'] ?? '',
+                        style: const TextStyle(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            fontSize: 8)),
+                    const SizedBox(height: 5),
                   ],
                 );
               }));

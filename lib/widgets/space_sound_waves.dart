@@ -55,7 +55,7 @@ class _SpaceSoundWavesState extends State<SpaceSoundWaves>
               width: 3,
               height: index % 2 == 0 ? ctrlMiddle.value : ctrlSide.value,
               decoration: BoxDecoration(
-                  color: SpacesColors.micColor,
+                  color: SpacesColors.micOffColor,
                   borderRadius: BorderRadius.circular(20)));
         }),
       ),

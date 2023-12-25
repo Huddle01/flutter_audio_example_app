@@ -1,8 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_example_app/screens/space_screen.dart';
+import 'package:huddle01_flutter_client/huddle01_flutter_client.dart';
 
 class LeaveScreen extends StatelessWidget {
-  const LeaveScreen({super.key});
+  LeaveScreen({super.key});
 
+  HuddleClient huddleClient = HuddleClient();
   @override
   Widget build(BuildContext context) {
     return const PopScope(
@@ -14,15 +19,16 @@ class LeaveScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'you left the spaces 😔',
+                'you left the spaces 👋',
                 textAlign: TextAlign.center,
               ),
               // TextButton(
               //     onPressed: () {
+              //       peersList.value.clear();
               //       Navigator.push(
               //         context,
               //         MaterialPageRoute(
-              //             builder: (context) => const TwitterSpaceHome()),
+              //             builder: (context) => const SpaceHome()),
               //       );
               //     },
               //     child: const Text(

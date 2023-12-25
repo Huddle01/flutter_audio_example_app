@@ -54,25 +54,51 @@ class _SpaceHomeState extends State<SpaceHome> {
     super.dispose();
   }
 
+  late bool createMeetingVisibility;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: SpacesColors.mainBgColor,
-        body: Center(child: GlowingEffect(
-          onTap: () async {
-            await huddleClient.joinRoom();
-            if (!context.mounted) return;
-            showModalBottomSheet(
-                isScrollControlled: true,
-                isDismissible: false,
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) {
-                  return SpaceModal(
-                    huddleClient: huddleClient,
-                  );
-                }).whenComplete(() {});
-          },
-        )));
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 87, 98, 196),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    textStyle: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.bold)),
+                onPressed: () async {
+                  await huddleClient.fetchAudioStream();
+                  await huddleClient.joinRoom();
+                  huddleClient.useEventListener(
+                      'room:joined',
+                      () => {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                isDismissible: false,
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) {
+                                  return SpaceModal(
+                                    huddleClient: huddleClient,
+                                  );
+                                })
+                          });
+                },
+                child: const Text(
+                  'start meeting\n📷',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.amberAccent),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
