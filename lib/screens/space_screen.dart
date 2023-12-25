@@ -79,6 +79,7 @@ class _SpaceHomeState extends State<SpaceHome> {
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 isDismissible: false,
+                                enableDrag: false,
                                 backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (context) {

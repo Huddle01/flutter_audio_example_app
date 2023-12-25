@@ -39,9 +39,9 @@ class _SpaceConversationState extends State<SpaceConversation> {
         valueListenable: peersList,
         builder: (_, val, ___) {
           return GridView.count(
-              childAspectRatio: 0.5,
+              childAspectRatio: 0.75,
               crossAxisCount: 4,
-              mainAxisSpacing: 25,
+              mainAxisSpacing: 7.5,
               children: List.generate(val.length, (index) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
