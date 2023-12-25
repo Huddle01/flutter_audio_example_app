@@ -38,7 +38,7 @@ class _SpaceHomeState extends State<SpaceHome> {
 
   initialiseSpace() async {
     huddleClient.initialize('XBQsbfXdUWW7YlkyF9Yb7BSft6aILeOW');
-    await huddleClient.joinLobby('zth-aegg-lgb');
+    await huddleClient.joinLobby('thp-mhsc-yjs');
   }
 
   @override
