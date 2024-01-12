@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  huddle01_flutter_client: ^0.0.1-beta-v5.4
+  huddle01_flutter_client: ^0.0.1-beta-v5.5.1
   permission_handler: ^11.0.1
 
 dev_dependencies:
